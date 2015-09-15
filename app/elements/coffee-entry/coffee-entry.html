@@ -1,0 +1,65 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="coffee-entry">
+  <style>
+    google-map {
+      height: 600px;
+    }
+  </style>
+  <template>
+    <firebase-collection id="coffeeList" location="https://acoffee.firebaseio.com/entries" data="{{coffees}}"></firebase-collection>
+    <form>
+      <paper-input id="title" label="Title"></paper-input>
+      <paper-textarea id="post" label="Your text..." rows="10"></paper-textarea>
+      <paper-input id="wifi" label="Wifi"></paper-input>
+      <paper-input id="laptop" label="Laptop"></paper-input>
+      <paper-input id="food" label="Food"></paper-input>
+      <paper-input id="coffeetype" label="Type Coffee"></paper-input>
+      <google-map latitude="51.21941189684233" longitude="4.4055706439941105" zoom="15">
+        <google-map-marker id="marker" latitude="51.21941189684233" longitude="4.4055706439941105" draggable="true"></google-map-marker>
+      </google-map>
+      <div class="buttons">
+        <paper-button on-click="submitEntry" raised dialog-confirm>Submit</paper-button>
+       <a href="/"><paper-button dialog-dismiss>Cancel</paper-button></a>
+    </form>
+  </template>
+</dom-module>
+<script>
+(function() {
+  Polymer({
+    is: 'coffee-entry',
+
+    properties: {
+      foo: {
+        type: String,
+        value: 'bar',
+        notify: true
+      },
+    },
+    submitEntry: function () {
+      console.log('submit pressed');
+      this.$.coffeeList.add({
+        title: this.$.title.value,
+        post: this.$.post.value,
+        wifi: this.$.wifi.value,
+        laptop: this.$.laptop.value,
+        food: this.$.food.value,
+        locationlat: this.$.marker.latitude,
+        locationlong: this.$.marker.longitude,
+        coffeetype: this.$.coffeetype.value,
+        timestamp: Firebase.ServerValue.TIMESTAMP
+      })
+    }
+  });
+})();
+</script>
