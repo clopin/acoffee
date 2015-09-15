@@ -18,8 +18,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </style>
   <template>
     <firebase-collection id="listCoffeees" location="https://acoffee.firebaseio.com/entries" data="{{coffees}}"></firebase-collection>
-    <div>Test</div>
-    <google-map latitude="51.21941189684233" longitude="4.4055706439941105" zoom="15">
+    <google-map fit-to-markers>
       <template is="dom-repeat" items="{{coffees}}">
         <google-map-marker latitude="{{item.locationlat}}" longitude="{{item.locationlong}}"></google-map-marker>  
       </template>

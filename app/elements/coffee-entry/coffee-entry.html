@@ -28,6 +28,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <google-map latitude="51.21941189684233" longitude="4.4055706439941105" zoom="15">
         <google-map-marker id="marker" latitude="51.21941189684233" longitude="4.4055706439941105" draggable="true"></google-map-marker>
       </google-map>
+      <input type="file" name="File" id="file" on-change="setFiles" accept="image/*" >
       <div class="buttons">
         <paper-button on-click="submitEntry" raised dialog-confirm>Submit</paper-button>
        <a href="/"><paper-button dialog-dismiss>Cancel</paper-button></a>
@@ -36,6 +37,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 </dom-module>
 <script>
 (function() {
+  var imgval = '';
+
   Polymer({
     is: 'coffee-entry',
 
@@ -46,19 +49,43 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         notify: true
       },
     },
+
+    setFiles: function(){
+      this.fileInput = this.$.file.files[0];
+      var that = this;
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        that.hasimage = true;
+        that.imgval = reader.result;
+        console.log(that.imgval);
+      }
+      reader.readAsDataURL(this.fileInput);
+    },
+
+
     submitEntry: function () {
-      console.log('submit pressed');
-      this.$.coffeeList.add({
-        title: this.$.title.value,
-        post: this.$.post.value,
-        wifi: this.$.wifi.value,
-        laptop: this.$.laptop.value,
-        food: this.$.food.value,
-        locationlat: this.$.marker.latitude,
-        locationlong: this.$.marker.longitude,
-        coffeetype: this.$.coffeetype.value,
+      var that = this;
+      var tmp;
+      if(typeof that.imgval === 'undefined') {tmp=''} else {tmp=that.imgval};
+      that.$.coffeeList.add({
+        title: that.$.title.value,
+        post: that.$.post.value,
+        wifi: that.$.wifi.value,
+        laptop: that.$.laptop.value,
+        food: that.$.food.value,
+        locationlat: that.$.marker.latitude,
+        locationlong: that.$.marker.longitude,
+        coffeetype: that.$.coffeetype.value,
+        image: tmp,
         timestamp: Firebase.ServerValue.TIMESTAMP
       })
+
+      this.$.title.value = '';
+      this.$.post.value = '';
+      this.$.wifi.value = '';
+      this.$.laptop.value = '';
+      this.$.food.value = '';
+      this.$.coffeetype.value = '';
     }
   });
 })();
